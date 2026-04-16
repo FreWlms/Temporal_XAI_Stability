@@ -1,0 +1,13 @@
+.claude
+.ipynb_checkpoints
+data
+shoppers_data.zip
+Adtracking_fraud_5.ipynb
+CreditCardFraud_1.0.ipynb
+CreditCardFraud_2.0.ipynb
+Sparkov.ipynb
+experiment_config.json
+temporal_stability_results.csv
+working_doc.ipynb
+Dataset_Splitting.ipynb
+Experiment_Matisse.ipynb
