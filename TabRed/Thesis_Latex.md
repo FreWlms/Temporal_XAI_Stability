@@ -855,23 +855,10 @@ rather than on local post-hoc explanation drift or explainer stochasticity.
 
 
 
-\section{Implementation}
-\label{sec:implementation}
+\Section{Use of the TabReD Benchmark}
+\label{sec:impl_tabred}
 
-This section describes how the proposed methodology is instantiated in the
-empirical study. The full codebase is available in the accompanying GitHub
-repository.\footnote{\url{https://github.com/FreWlms/Temporal_XAI_Stability/tree/main}}
-The implementation is organised around three datasets from the TabReD benchmark.
-For each dataset, the same general rolling-retraining and explanation-stability
-framework is applied, while dataset-specific choices such as the timestamp,
-preprocessing recipe, window configuration, and model settings are documented
-separately.
-
-
-\subsection{Use of the TabReD Benchmark}
-\label{subsec:impl_tabred}
-
-The empirical study is based on datasets from the TabReD benchmark 
+The empirical study is based on three datasets from the TabReD benchmark 
 \cite{rubachev_tabred_2024}. TabReD is well suited to this thesis for two
 reasons.
 
@@ -894,6 +881,7 @@ datasets, and its preprocessing scripts serve as the starting point for the
 feature construction. We do not, however, adopt TabReD's static benchmark
 protocol directly. The train/test construction is replaced by the rolling-window
 setup described in Section~\ref{sec:rolling_setup}.
+
 
 
 \subsection{Implementation 1: Acquire Valued Shoppers Challenge}
