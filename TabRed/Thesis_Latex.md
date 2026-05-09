@@ -11,7 +11,7 @@ Intuitively, stability means that explanations should not change drastically wit
 \[
 \hat{y} = \beta_0 + \sum_{j=1}^{p} \beta_j x_j.
 \]
-Here, the coefficients $\beta_j$ directly represent how features influence the prediction. If the model is retrained and the coefficients change, the change in reasoning is explicit. For complex models, we need an extra layer: an XAI method translates the model into an explanation. This extra layer introduces new uncertainty. They may reflect a genuine change in the model's behavior, but they may also arise from approximation error, sensitivity to perturbations, or other forms of methodological variability. Stability is therefore crucial for the practical trustworthiness of XAI.
+Here, the coefficients $\beta_j$ directly represent how features influence the prediction \cite{verbeke2025aiforbusiness}. If the model is retrained and the coefficients change, the change in reasoning is explicit. For complex models, we need an extra layer: an XAI method translates the model into an explanation. This extra layer introduces new uncertainty. They may reflect a genuine change in the model's behavior, but they may also arise from approximation error, sensitivity to perturbations, or other forms of methodological variability. Stability is therefore crucial for the practical trustworthiness of XAI.
 
 Much of the discussion around stability starts from a \emph{static} setting: the model and data are assumed fixed, and stability is tested by running the explainer multiple times or by applying small perturbations to the input. If explanations vary strongly under such small changes, this suggests that the explanation method may be unstable and therefore unreliable in practice.\cite{alvarez-melis_robustness_2018} For example, LIME relies on randomly sampled perturbations to fit a local surrogate model, which can lead to different explanations across runs. SHAP has a deterministic definition, but in many practical settings Shapley values are approximated, which can also introduce variance. In addition, SHAP can behave unpredictably when features are highly correlated, because the attribution can shift between correlated features.\cite{aas_explaining_2020}
 
@@ -42,35 +42,102 @@ In summary, this thesis contributes (i) a clear experimental protocol for compar
 
 \section{Literature review\label{sec:LitRev}}
 \subsection{Explainable Artificial Intelligence}
-A universally accepted definition of Explainable Artificial Intelligence (XAI) does not exist. Related terms such as \emph{interpretability}, \emph{explainability}, \emph{transparency}, and \emph{understandability} are used in overlapping but inconsistent ways across the literature \cite{barredo_arrieta_explainable_2020, graziani2022globaltaxonomy, lipton2018mythos}. In broad terms, XAI refers to methods and principles that help human users understand, appropriately trust, and effectively use the outputs of AI systems, especially when those systems are otherwise opaque \cite{nist2021xai, barredo_arrieta_explainable_2020}.
 
-While much of the current popularity of XAI centres on feature attribution techniques, the field is broader. It also encompasses rule-based explanations, counterfactuals, surrogate models, saliency maps, and inherently interpretable model classes \cite{guidotti2018survey, barredo_arrieta_explainable_2020}. This thesis focuses specifically on feature attribution methods, but situating them within this broader landscape is important to avoid equating XAI with feature importance alone.
+\paragraph{Definition and scope.}
+A universally accepted definition of Explainable Artificial Intelligence (XAI) does not exist. Related terms such as \emph{interpretability}, \emph{explainability}, \emph{transparency}, and \emph{understandability} are used in overlapping but inconsistent ways across the literature \cite{barredo_arrieta_explainable_2020, graziani2022globaltaxonomy, lipton2018mythos}. In broad terms, XAI refers to methods and principles that help human users understand, appropriately trust, and effectively use the outputs of AI systems, especially when those systems are otherwise opaque \cite{nist2021xai, barredo_arrieta_explainable_2020}. While much of the current popularity of XAI centres on feature attribution techniques, the field is broader and also encompasses rule-based explanations, counterfactuals, surrogate models, saliency maps, and inherently interpretable model classes \cite{guidotti2018survey, barredo_arrieta_explainable_2020}. This thesis focuses specifically on feature attribution methods, but situating them within this broader landscape is important to avoid equating XAI with feature importance alone.
 
-\subsection{Need for Explainability}
-The need for explainability arises because many high-performing machine learning models, such as deep neural networks and ensemble methods, remain difficult for humans to understand. This opacity becomes problematic in high-stakes settings where AI-assisted decisions affect individuals' rights, safety, or access to important opportunities \cite{rudin_stop_2019, barredo_arrieta_explainable_2020}. In such contexts, stakeholders require not only accurate predictions but also insight into how those predictions were produced \cite{doshivelez2017rigorous}.
+\paragraph{The need for explainability.}
+The need for explainability arises because many high-performing machine learning models, such as deep neural networks and ensemble methods, remain difficult for humans to understand. This opacity becomes problematic in high-stakes settings where AI-assisted decisions affect individuals' rights, safety, or access to important opportunities \cite{rudin_stop_2019, barredo_arrieta_explainable_2020}. In such contexts, stakeholders require not only accurate predictions but also insight into how those predictions were produced \cite{doshivelez2017rigorous}. Explainability is closely related to accountability, oversight, and trust: it enables practitioners to validate model behaviour, identify failure modes, and detect undesirable dependencies or biases in the learned decision logic \cite{guidotti2018survey, mehrabi2021fairness}. In the European regulatory context, the EU AI Act requires high-risk AI systems to be sufficiently transparent that deployers can interpret and appropriately use their outputs \cite{eu_ai_act_2024}. In applied settings, explainability has also been shown to support model debugging and performance improvement \cite{comapuig2021humanintheloopapproachbasedexplainability, rizzi2020ppm}.
 
-Explainability is closely related to accountability, oversight, and trust. It enables practitioners to validate model behaviour, identify failure modes, and detect undesirable dependencies or biases in the learned decision logic \cite{guidotti2018survey, mehrabi2021fairness}. In the European regulatory context, the EU AI Act requires high-risk AI systems to be sufficiently transparent that deployers can interpret and appropriately use their outputs \cite{eu_ai_act_2024}. In applied settings, explainability has also been shown to support model debugging and performance improvement \cite{comapuig2021humanintheloopapproachbasedexplainability, rizzi2020ppm}.
+\paragraph{Interpretability versus explainability.}
+Although the terms \emph{interpretability} and \emph{explainability} are often used interchangeably, a useful distinction exists in the literature. \emph{Interpretability} typically refers to the degree to which a model is understandable by design, so-called white-box models, whereas \emph{explainability} refers to post-hoc methods that help humans understand models that are not inherently transparent \cite{lipton2018mythos, graziani2022globaltaxonomy, barredo_arrieta_explainable_2020}. Under this view, linear models, decision trees, and rule-based systems are considered interpretable, while models such as neural networks, non-linear SVMs, and large ensembles typically require external explanation techniques \cite{guidotti2018survey, rudin_stop_2019}. This distinction matters in practice. Rudin~\cite{rudin_stop_2019} argues that when a task can be solved adequately with an inherently interpretable model, such a model should be preferred over an opaque one explained only after the fact. Nevertheless, black-box models remain widely used because of their flexibility and predictive performance, which sustains the demand for post-hoc XAI methods \cite{barredo_arrieta_explainable_2020, guidotti2018survey}.
 
-
-\subsection{Interpretability versus Explainability}
-Although the terms \emph{interpretability} and \emph{explainability} are often used interchangeably, a useful distinction exists in the literature. \emph{Interpretability} typically refers to the degree to which a model is understandable by design, so-called white-box models, whereas \emph{explainability} refers to post-hoc methods that help humans understand models that are not inherently transparent \cite{lipton2018mythos, graziani2022globaltaxonomy, barredo_arrieta_explainable_2020}. Under this view, linear models, decision trees, and rule-based systems are considered interpretable, while models such as neural networks, non-linear SVMs, and large ensembles typically require external explanation techniques \cite{guidotti2018survey, rudin_stop_2019}.
-
-This distinction matters in practice. Rudin~\cite{rudin_stop_2019} argues that when a task can be solved adequately with an inherently interpretable model, such a model should be preferred over an opaque one explained only after the fact. Nevertheless, black-box models remain widely used because of their flexibility and predictive performance, which sustains the demand for post-hoc XAI methods \cite{barredo_arrieta_explainable_2020, guidotti2018survey}.
+\paragraph{A taxonomy of XAI methods.}
+The XAI literature contains a broad variety of explanation techniques, which are commonly organized along two complementary dimensions \cite{barredo_arrieta_explainable_2020, guidotti2018survey, molnar2022interpretable, verbeke2025aiforbusiness}. The first dimension concerns \emph{scope}. \emph{Local explanations} focus on a single prediction: why did the model assign this particular score or label to this observation? \emph{Global explanations}, by contrast, describe the model's behaviour at a broader level, identifying which variables systematically drive predictions across the data distribution \cite{molnar2022interpretable}. The boundary is not always strict; some methods generate instance-level explanations that can be aggregated to obtain global insights \cite{guidotti2018survey}. The second dimension concerns \emph{model dependence}. \emph{Model-agnostic} methods treat the predictive model as a black box and operate solely on the input--output relationship, which makes them applicable across model classes \cite{molnar2022interpretable}. \emph{Model-specific} methods, by contrast, exploit the internal structure of a particular model family, often gaining computational efficiency or closer alignment with the model formulation at the cost of reduced generality \cite{guidotti2018survey, molnar2022interpretable}. Examples include coefficient-based interpretations for linear and logistic regression, impurity-based feature importance in tree ensembles, and methods such as Grad-CAM for convolutional neural networks \cite{selvaraju2017grad, verbeke2025aiforbusiness}, while permutation-based feature importance, originally introduced by Breiman~\cite{breiman2001random} for random forests, is model-agnostic and can be applied to any trained predictor \cite{molnar2022interpretable, verbeke2025aiforbusiness}. These two dimensions are complementary: a method can be local and model-agnostic, such as LIME, or global and model-specific, such as regression scorecards, while methods such as SHAP can be both local and global depending on how they are computed and summarized \cite{lundberg_unified_2017, verbeke2025aiforbusiness}. Beyond this scope--dependence axis, the literature identifies several further families of explanation methods, including rule-based local explanations, counterfactual and contrastive explanations, gradient- and propagation-based attribution, example-based explanations, and global model-agnostic visualisation tools \cite{schwalbe2024comprehensive}. Feature attribution methods such as LIME and SHAP are therefore one family within a broader landscape rather than synonymous with XAI. Because the present thesis focuses on tabular feature attribution, we briefly survey the most relevant alternative families in Section~\ref{sec:other-families} before turning to LIME and SHAP in detail.
 
 
-\subsection{Types of XAI methods}
-The XAI literature contains a broad variety of explanation techniques. Two complementary dimensions are commonly used to organize them \cite{barredo_arrieta_explainable_2020, guidotti2018survey, molnar2022interpretable, verbeke2025aiforbusiness}.
-
-The first dimension concerns \emph{scope}. \emph{Local explanations} focus on a single prediction: why did the model assign this particular score or label to this observation? \emph{Global explanations}, by contrast, describe the model's behaviour at a broader level, identifying which variables systematically drive predictions across the data distribution \cite{molnar2022interpretable}. The boundary is not always strict; some methods generate instance-level explanations that can be aggregated to obtain global insights \cite{guidotti2018survey}.
-
-The second dimension concerns \emph{model dependence}. \emph{Model-agnostic} methods treat the predictive model as a black box and operate solely on the input--output relationship, which makes them applicable across model classes \cite{molnar2022interpretable}. \emph{Model-specific} methods exploit the internal structure of a particular model family, often gaining computational efficiency at the cost of generality \cite{guidotti2018survey}. For example, coefficient-based interpretation in linear regression is model-specific, whereas permutation-based feature importance is model-agnostic \cite{molnar2022interpretable, verbeke2025aiforbusiness}.
-
-Within this taxonomy, several families of explanation methods exist, including feature attribution methods, surrogate methods, rule-based and example-based explanations, counterfactual explanations, and visual explanation techniques such as saliency maps \cite{barredo_arrieta_explainable_2020, guidotti2018survey}. Because this thesis studies tabular predictive models, the most relevant family is \emph{feature attribution}: methods that quantify how much each input variable contributed to a prediction. The two most prominent feature attribution methods are LIME and SHAP, which are discussed in the following subsections.
 
 
-\emph{Model-specific} methods, by contrast, exploit structural properties of a particular model family. This often allows them to produce explanations that are computationally efficient or closely aligned with the model formulation, but at the cost of reduced generality \cite{guidotti2018survey,molnar2022interpretable}. Examples include coefficient-based interpretations for linear and logistic regression, impurity-based feature importance in tree ensembles, and methods such as Grad-CAM for convolutional neural networks \cite{selvaraju2017grad,verbeke2025aiforbusiness}.
+\subsection{Other Families of XAI Methods}\label{sec:other-families}
 
-These two dimensions are complementary. A method can be local and model-agnostic, such as LIME, or global and model-specific, such as regression scorecards. Other methods, such as SHAP, can be both local and global depending on how they are computed and summarized \cite{lundberg_unified_2017,verbeke2025aiforbusiness}.
+This subsection briefly surveys four families of post-hoc explanation methods 
+that complement the feature-attribution approach taken in this thesis, together 
+with one inherently interpretable alternative. The aim is not to describe each 
+method in detail but to situate SHAP and LIME within the broader landscape.
+
+\paragraph{Rule-based local explanations.}
+Anchors \cite{ribeiro2018anchors} are a model-agnostic local explanation method 
+proposed by the same authors as LIME. Instead of fitting a linear surrogate, 
+Anchors identify a small set of feature conditions under which the model's 
+prediction is, with high probability, the same as for the explained instance. 
+The result is an if--then rule that the user can read directly. In a user 
+study, this rule-based format helped participants predict model behaviour on 
+unseen instances more accurately than linear explanations \cite{ribeiro2018anchors}. 
+Anchors and LIME thus share an explanatory target but differ in the form of 
+the explanation, which illustrates that even within local model-agnostic 
+methods there are meaningful design choices beyond feature attribution.
+
+\paragraph{Counterfactual and contrastive explanations.}
+Counterfactual explanations describe the smallest change to the input that 
+would flip the model's decision, rather than attributing the current decision 
+to features. Wachter et al.\ \cite{wachter2017counterfactual} introduced this 
+formulation as a way to explain automated decisions under the GDPR without 
+revealing the internal logic of the underlying model. Subsequent work has 
+extended the idea to generate sets of diverse and feasible counterfactuals 
+that better support actionable recourse \cite{mothilal2020explaining}. 
+Counterfactuals are particularly relevant in the regulatory context discussed 
+in 
+~\ref{sec:need-for-explainability}, since they can directly answer 
+the question of what an affected individual would need to change to obtain a 
+different outcome.
+
+\paragraph{Gradient- and propagation-based attribution.}
+For differentiable models, attributions can be computed directly from the 
+model's gradients rather than by perturbation or sampling. Integrated 
+Gradients \cite{sundararajan2017axiomatic} attribute a prediction to input 
+features by integrating gradients along a straight path from a baseline input 
+to the actual input, and are characterised by axioms such as sensitivity and 
+implementation invariance. Layer-wise Relevance Propagation 
+\cite{bach2015pixel} instead propagates the prediction backward through the 
+network using conservation rules, and Grad-CAM \cite{selvaraju2017grad} 
+combines gradient and activation information to produce class-discriminative 
+visualisations for convolutional networks. These methods share with SHAP a 
+focus on additive feature contributions, but rely on internal model structure 
+rather than on a model-agnostic surrogate. Stability concerns are not unique 
+to perturbation-based methods: gradient-based saliency maps have been observed 
+to be visually noisy, which motivated smoothing variants such as SmoothGrad 
+that average attributions over noisy copies of the input \cite{smilkov2017smoothgrad}.
+
+\paragraph{Global model-agnostic methods.}
+Several explanation methods describe model behaviour at the dataset level 
+rather than for a single instance. Partial Dependence Plots 
+\cite{friedman2001greedy} visualise the average predicted response as a 
+function of one or two features, marginalising over the remaining features. 
+Individual Conditional Expectation plots \cite{goldstein2015peeking} disaggregate 
+this average curve into one curve per instance, exposing heterogeneous 
+relationships that a partial dependence plot can hide. Permutation feature importance, introduced by Breiman \cite{breiman2001random} and later extended by Fisher et al. [13], ranks features by the increase in prediction error caused by permuting their values. A recurring theme in this literature, also relevant 
+to SHAP, is sensitivity to feature correlation: partial dependence plots can 
+require extrapolation outside the data manifold when features are correlated, 
+which motivated the development of Accumulated Local Effects plots 
+\cite{apley2020visualizing} as a more reliable alternative.
+
+\paragraph{Inherently interpretable high-performance models.}
+A different response to the interpretability--accuracy tension is to design 
+models that are both accurate and interpretable from the start, rather than 
+applying post-hoc explanations to opaque models. Generalised additive models 
+with pairwise interactions, applied to healthcare prediction tasks by 
+Caruana et al.\ \cite{caruana2015intelligible}, achieve accuracy competitive with random forests while remaining inspectable as a sum of one- and two-dimensional shape functions. The Explainable Boosting 
+Machine implementation in InterpretML \cite{nori2019interpretml} has made 
+such glassbox models practically available. This line of work supports 
+Rudin's argument \cite{rudin_stop_2019} that, for many tabular tasks, an 
+inherently interpretable model can be a viable alternative to a black-box 
+model accompanied by a post-hoc explanation.
+
+These families are complementary rather than competing. The present thesis 
+focuses on SHAP and LIME because they are the most widely used post-hoc 
+feature-attribution methods for tabular data, but several of the stability 
+considerations developed in subsequent chapters apply, mutatis mutandis, to 
+the other families surveyed here.
 
 \subsection{LIME}
 Local Interpretable Model-agnostic Explanations (LIME) is one of the most widely used post-hoc XAI methods for tabular data \cite{ribeiro_why_2016}. It belongs to the family of local surrogate methods: rather than explaining the black-box model globally, LIME approximates its behaviour in a small neighbourhood around the instance of interest using a simpler, interpretable model such as a sparse linear regression \cite{ribeiro_why_2016, molnar2022interpretable}.
@@ -106,9 +173,10 @@ This distinction matters because observed explanation changes in practice are ty
 
 \subsection{Stability as a quality criterion for explainable AI}
 \label{subsec:stability}
-If explanations are to support trust and decision-making, they should be reasonably stable: similar instances should not receive fundamentally different explanations without a meaningful reason \cite{alvarez-melis_robustness_2018, bhatt2020evaluating}. When small input changes produce large explanation changes, users may perceive the explanation as arbitrary, which undermines its practical value. Stability is therefore widely regarded as an important quality criterion for XAI, alongside faithfulness and interpretability \cite{bhatt2020evaluating, longo2024xai2}.
+If explanations are to support trust and decision-making, they should be reasonably stable: similar instances should not receive fundamentally different explanations without a meaningful reason \cite{alvarez-melis_robustness_2018, bhatt2020evaluating}. When small input changes produce large explanation changes, users may perceive the explanation as arbitrary, which undermines its practical value. Stability is therefore widely regarded as an important quality criterion for XAI, alongside faithfulness and interpretability \cite{bhatt2020evaluating, longo_explainable_2024}.
 
-The existing stability literature focuses almost exclusively on \emph{static} settings, where the data distribution and the trained model are assumed fixed. In this setting, stability is typically assessed by applying small perturbations to an input and measuring how strongly the explanation changes \cite{alvarez-melis_robustness_2018, bhatt2020evaluating}. The central finding is that many post-hoc methods are more sensitive than desirable. Alvarez-Melis and Jaakkola~\cite{alvarez-melis_robustness_2018} formalize this as a local Lipschitz continuity requirement on the explanation function and show empirically that several methods violate it: small input perturbations can produce disproportionately large explanation changes. Bhatt et al.~\cite{bhatt2020evaluating} reach a complementary conclusion, arguing that explanation methods should be evaluated on sensitivity alongside faithfulness, and that low sensitivity is a necessary condition for trustworthy attributions. These concerns are echoed in recent meta-surveys that identify robustness and stability as persistent open challenges in XAI evaluation \cite{saeed2023metasurvey, longo2024xai2}.
+The existing stability literature focuses almost exclusively on \emph{static} settings, where the data distribution and the trained model are assumed fixed. In this setting, stability is typically assessed by applying small perturbations to an input and measuring how strongly the explanation changes \cite{alvarez-melis_robustness_2018, bhatt2020evaluating}. The central finding is that many post-hoc methods are more sensitive than desirable. Alvarez-Melis and Jaakkola~\cite{alvarez-melis_robustness_2018} formalize this as a local Lipschitz continuity requirement on the explanation function and show empirically that several methods violate it: small input perturbations can produce disproportionately large explanation changes. Bhatt et al.~\cite{bhatt2020evaluating} reach a complementary conclusion, proposing low sensitivity, high faithfulness, and low complexity as desiderata for feature-based explanation methods.
+These concerns are echoed in recent meta-surveys that identify robustness and stability as persistent open challenges in XAI evaluation \cite{saeed_explainable_2023, longo_explainable_2024}.
 
 These static findings establish that explanation instability is a real and measurable problem. However, they leave open a question that is directly relevant to deployed systems: what does stability mean when the model itself changes over time? The next section addresses this transition from static to dynamic settings.
 
@@ -132,8 +200,6 @@ This thesis addresses the resulting gap. Existing static stability research (Sec
     - Slack et al. (2020), "Fooling LIME and SHAP: Adversarial Attacks on Post Hoc Explanation Methods --> Show that LIME and SHAP can be deliberatly manipulated to product misleading explanations
     - Garreau & von Luxburg (2020), "Explaining the Explainer: A First Theoretical Analysis of LIME" --> Provides formal analysis of when and why LIME's explanations are sensitive to its hyperparameters
     
-
-
 
 
 \section{Methodology: Temporal Stability of XAI Under Rolling Retraining}
@@ -852,11 +918,7 @@ rather than on local post-hoc explanation drift or explainer stochasticity.
 
 
 
-
-
-
-\Section{Use of the TabReD Benchmark}
-\label{sec:impl_tabred}
+\section{Use of the TabReD Benchmark \label{sec:impl_tabred}}
 
 The empirical study is based on three datasets from the TabReD benchmark 
 \cite{rubachev_tabred_2024}. TabReD is well suited to this thesis for two
@@ -881,199 +943,3 @@ datasets, and its preprocessing scripts serve as the starting point for the
 feature construction. We do not, however, adopt TabReD's static benchmark
 protocol directly. The train/test construction is replaced by the rolling-window
 setup described in Section~\ref{sec:rolling_setup}.
-
-
-
-\subsection{Implementation 1: Acquire Valued Shoppers Challenge}
-\label{subsec:impl_shoppers}
-
-The first implemented dataset is the \emph{Acquire Valued Shoppers Challenge}
-dataset. This is a binary classification task in which the goal is to predict
-whether a customer who received a personalised offer will become a repeat buyer.
-Each observation corresponds to a customer--offer pair, and the target indicates
-whether the customer made a qualifying return purchase after receiving the
-offer.
-
-\subsubsection{Preprocessing}
-
-The raw dataset consists of a customer--offer table, an offer catalogue, and a
-large transaction log. We follow the feature-construction logic of TabReD's
-\texttt{ecom-offers.py} preprocessing script to convert these relational data
-into a fixed-width tabular representation, but adapt the temporal transaction
-filters to exclude post-offer purchases from the predictor variables.
-
-The resulting features summarise each customer's historical purchasing behaviour
-before the offer date. Transaction histories are aggregated over several
-look-back windows and over product scopes such as the offered company,
-category, and brand. These behavioural aggregates are combined with offer-level
-features and binary indicators describing whether the customer had previously
-purchased from the relevant company, category, or brand.
-
-The final processed dataset contains 119 predictors: 113 numeric features and
-6 binary indicator features. The numeric features include transaction-spend
-aggregates, offer value, offer-date variables, and look-back-window aggregates
-over the relevant company, category, and brand scopes. The binary features
-summarise whether the customer had previously purchased in the corresponding
-company, category, and brand scopes. These processed artefacts are saved once
-and used by all downstream notebooks.
-
-A substantial share of customers has no historical transaction record in the
-source log before the offer date. For these observations, behavioural aggregate
-features are zero-valued and the corresponding ``never bought'' indicators are
-active. This is a meaningful state rather than missing data, but it creates a
-large point mass at zero for several aggregate features, which should be kept in
-mind when interpreting Wasserstein-based covariate drift.
-
-\subsubsection{Temporal Setup}
-
-For this implementation, the rolling-window configuration is:
-\[
-L = 5, \qquad s = 2, \qquad h = 2,
-\]
-where \(L\) is the training-window length in weeks, \(s\) is the temporal gap
-between the two model versions compared within a pair, and \(h\) is the
-evaluation horizon. Thus, each model is trained on five
-weeks of data, adjacent model versions are separated by two weeks, and both are
-evaluated on the same two-week future slice.
-
-Weekly grouping provides a compromise between temporal resolution and the
-number of observations per time step. Because the Shoppers offer period covers
-only about two months, this configuration yields two valid rolling
-comparisons; the results for this dataset should therefore be interpreted as a
-case study rather than as a long temporal time series.
-
-\subsubsection{Models}
-
-The Shoppers implementation uses three model families:
-\begin{itemize}
-    \item logistic regression, used as a transparent reference model;
-    \item XGBoost, used as a strong tree-based tabular model;
-    \item MLP-PLR, used as a neural tabular model with numerical feature
-          embeddings.
-\end{itemize}
-
-Logistic regression coefficients are used as a model-level reference for
-coefficient stability. XGBoost is explained using TreeSHAP. MLP-PLR is explained
-using a gradient-based SHAP explainer. LIME explanations are computed on a
-subsample of the selected flagged instances because of their higher
-computational cost.
-
-\subsubsection{Replica Training and Hyperparameter Tuning}
-
-For each window pair, hyperparameters are tuned separately for model version
-\(A\) and model version \(B\). Tuning is performed within the corresponding
-training window using a 3-fold \texttt{TimeSeriesSplit} cross-validation, with
-average precision (PR-AUC) as the optimisation criterion. Hyperparameter
-search is performed with Optuna using a TPE sampler, with \(50\), \(15\), and
-\(20\) trials per window for XGBoost, logistic regression, and MLP-PLR
-respectively. The exact search-space bounds for each family are documented in
-the accompanying repository. The selected hyperparameters are then kept fixed
-across all \(R = 8\) replicas of that model version.
-
-Replica variability is introduced through class-stratified bootstrap sampling
-and model-specific random seeds. The same seeding convention is used across
-model families, so that replica indices are aligned as much as possible across
-the XGBoost, logistic-regression, and MLP-PLR implementations.
-
-XGBoost is trained directly on the processed feature matrix, with a hard cap
-of \(2000\) boosting rounds and early stopping after \(50\) rounds without
-validation-PR-AUC improvement. Logistic regression is implemented as a
-pipeline of a per-replica \texttt{StandardScaler} and an \(L_2\)-regularised
-logistic regression (\texttt{max\_iter} \(= 500\); \texttt{solver} =
-\texttt{newton-cholesky} where available, otherwise \texttt{lbfgs}). Each
-replica therefore fits its own scaler on its bootstrap sample, and the saved
-coefficient vector lives in that replica's standardised basis. MLP-PLR uses
-the same per-replica standardisation for numeric features, while binary
-indicator features are passed through unchanged. MLP-PLR replicas are trained
-with AdamW, a batch size of \(1024\), a maximum of \(50\) epochs, and patience
-\(10\) on validation PR-AUC for early stopping; tuning trials use a tighter
-\(20\)-epoch cap.
-
-For XGBoost and MLP-PLR, the final replica training uses the most recent
-\(15\%\) of each training window as a chronological early-stopping validation
-tail. Bootstrap samples are drawn from the remaining training portion.
-Logistic regression does not use early stopping and is bootstrapped from the
-full training window.
-In addition to these bootstrap replicas, one deterministic logistic-regression
-model is fitted on each complete training window. The coefficient vectors of
-these full-window models are used for the visual comparison of how the
-transparent model changes between versions \(A\) and \(B\).
-
-\subsubsection{Explanation Generation}
-
-SHAP explanations are generated for XGBoost and MLP-PLR, while logistic
-regression is represented by its fitted coefficient vectors. For XGBoost, we
-use TreeSHAP on the full flagged set and on the raw model margin, so the
-resulting SHAP values decompose the log-odds score rather than the predicted
-probability. For MLP-PLR, we use a gradient-based SHAP explainer applied to the
-pre-sigmoid logit. Because this computation is substantially more expensive,
-MLP-PLR SHAP is computed on the same rank-spread subsample of the flagged set
-used for LIME. Numeric features are transformed with the scaler belonging to
-the corresponding MLP-PLR replica before explanation, while binary features are
-passed through unchanged. The background set for each MLP-PLR SHAP explainer is
-sampled from the corresponding training window.
-
-LIME explanations are computed for XGBoost and MLP-PLR. In the Shoppers
-implementation, the LIME subsample is capped at 200 instances per window pair,
-and each LIME explanation uses 1000 perturbed samples. The same LIME subsample
-is used for model versions \(A\) and \(B\) within a pair. The LIME perturbation
-basis is window-specific: explanations for window \(A\) replicas use the raw
-training data from window \(A\), while explanations for window \(B\) replicas
-use the raw training data from window \(B\). The model prediction functions
-receive raw feature vectors; any scaling required by MLP-PLR is handled inside
-the model wrapper. The six binary indicator features are declared as
-categorical features in LIME so that they are sampled as discrete variables
-rather than as continuous quantities.
-
-
-\subsubsection{Explained Instances and Metrics}
-
-For each window pair and model family (XGBoost and MLP-PLR), explanations are computed on the
-flagged set \(\mathcal{F}_{A,B}\) using \(k = 0.10\), i.e. on
-\(\lceil 0.10\,|\mathcal{E}_{A,B}|\rceil\) evaluation instances ranked by the
-maximum of the two replica-averaged predicted positive-class probabilities.
-This focuses the analysis on instances considered relevant by at least one of
-the two model versions.
-
-The drift-analysis notebook combines the saved predictions, post-hoc attribution
-tensors, and logistic-regression coefficient vectors into the quantities
-reported in the results chapter: covariate drift, target drift, predictive
-performance, local explanation drift for SHAP and LIME, within-window baseline
-instability, global SHAP drift, explainer-stochasticity diagnostics, and the
-transparent logistic-regression coefficient reference.
-
-For comparability in the coefficient-stability analysis, the saved coefficient
-vectors used in the drift-analysis notebook are re-expressed in a common
-pair-level reference basis. Numeric coefficients are expressed per reference
-standard deviation, while binary coefficients remain on their raw \(0/1\)
-scale. The raw per-replica coefficients are retained for traceability but are
-not used directly for cross-window interpretation.
-
-\subsection{Implementation 2: Second TabReD Dataset}
-\label{subsec:impl_dataset_two}
-
-This implementation is still in progress. It will follow the same structure as
-the Shoppers implementation: the dataset-specific TabReD preprocessing recipe
-will be used to construct the feature matrix, after which the rolling-retraining
-framework will be applied using the dataset's natural timestamp.
-
-The final version of this subsection will document:
-\begin{itemize}
-    \item the prediction task and target variable;
-    \item the timestamp used for temporal ordering;
-    \item the dataset-specific preprocessing choices;
-    \item the selected values of \(L\), \(s\), and \(h\);
-    \item any deviations from the common model, explainer, or metric pipeline.
-\end{itemize}
-
-
-\subsection{Implementation 3: Third TabReD Dataset}
-\label{subsec:impl_dataset_three}
-
-This implementation is also still in progress. As with the second dataset, the
-goal is to reuse the same explanation-stability pipeline while only changing the
-dataset-specific preprocessing and temporal configuration.
-
-The final version of this subsection will document the concrete task,
-preprocessing recipe, rolling-window parameters, and any dataset-specific
-adaptations required to make the comparison meaningful.
