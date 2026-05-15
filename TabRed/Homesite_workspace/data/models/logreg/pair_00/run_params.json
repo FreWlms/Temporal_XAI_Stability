@@ -1,0 +1,34 @@
+{
+  "model_type": "logreg",
+  "seed_base": 42,
+  "window_parameters": {
+    "L": 8,
+    "S": 5,
+    "H": 3,
+    "R": 8,
+    "K_FRAC": 0.1,
+    "PAIR_STRIDE": 4
+  },
+  "cv_n_splits": 3,
+  "cat_min_freq": 0.01,
+  "cat_unk_value": -1,
+  "encoder_scope": "per_window_side_shared",
+  "class_weighting": {
+    "enabled": true,
+    "scheme": "balanced_sample_weights",
+    "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+    "clipped": false,
+    "evaluation_pr_auc_weighted": false,
+    "replica_data_scope": "full_window_no_es",
+    "tuning_data_scope": "fold_training_only",
+    "lr_full_window_data_scope": "full_window_no_es"
+  },
+  "lr_reference_basis_schema": "coef_ref_basis_v2_homesite_oh_l2",
+  "lr_full_window_reference_fit": true,
+  "lr_cat_aggregation": "l2_norm_per_cat_var",
+  "n_trials_logreg": 25,
+  "lr_fixed": {
+    "solver": "newton-cholesky",
+    "max_iter": 300
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "k_periodic": 13,
+  "sigma_init": 0.011252320429732364,
+  "d_embedding": 24,
+  "n_layers": 3,
+  "hidden_dim": 512,
+  "dropout": 0.4096779377382511,
+  "learning_rate": 0.0005718565151989507,
+  "weight_decay": 1.9853531953285618e-05
+}

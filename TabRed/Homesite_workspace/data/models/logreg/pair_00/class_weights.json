@@ -1,0 +1,35 @@
+{
+  "scheme": "balanced_sample_weights",
+  "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+  "clipped": false,
+  "evaluation_pr_auc_weighted": false,
+  "replica_data_scope": "full_window_no_es",
+  "A": {
+    "n_pos": 14576,
+    "n_neg": 57413,
+    "w_pos": 2.4694360592755213,
+    "w_neg": 0.6269398916621671,
+    "data_scope": "full_window_no_es"
+  },
+  "B": {
+    "n_pos": 15064,
+    "n_neg": 60986,
+    "w_pos": 2.52422995220393,
+    "w_neg": 0.6235037549601548,
+    "data_scope": "full_window_no_es"
+  },
+  "A_full_window": {
+    "n_pos": 14576,
+    "n_neg": 57413,
+    "w_pos": 2.4694360592755213,
+    "w_neg": 0.6269398916621671,
+    "data_scope": "full_window_no_es"
+  },
+  "B_full_window": {
+    "n_pos": 15064,
+    "n_neg": 60986,
+    "w_pos": 2.52422995220393,
+    "w_neg": 0.6235037549601548,
+    "data_scope": "full_window_no_es"
+  }
+}

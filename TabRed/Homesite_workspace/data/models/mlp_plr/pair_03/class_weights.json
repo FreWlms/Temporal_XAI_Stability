@@ -1,0 +1,21 @@
+{
+  "scheme": "balanced_sample_weights",
+  "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+  "clipped": false,
+  "evaluation_pr_auc_weighted": false,
+  "replica_data_scope": "training_core_before_early_stopping_tail",
+  "A": {
+    "n_pos": 12192,
+    "n_neg": 55640,
+    "w_pos": 2.781824146981627,
+    "w_neg": 0.6095614665708123,
+    "data_scope": "training_core_before_early_stopping_tail"
+  },
+  "B": {
+    "n_pos": 10121,
+    "n_neg": 47650,
+    "w_pos": 2.8540164015413496,
+    "w_neg": 0.6062014690451206,
+    "data_scope": "training_core_before_early_stopping_tail"
+  }
+}
