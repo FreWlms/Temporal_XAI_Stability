@@ -1,0 +1,24 @@
+{
+  "schema_version": "stoch_raw_runs_v1",
+  "n_runs": 8,
+  "run_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007
+  ],
+  "replica_selection": "central_prediction_on_explained_instances",
+  "replica_A": 2,
+  "replica_B": 0,
+  "n_explained": 400,
+  "n_features": 119,
+  "explained_local_idx_sha1": "be7cdde1b7d53ed7ac1c120cf67648c376078eca",
+  "is_deterministic_runs": false,
+  "bg_seed_convention": "fixed_per_side_v2",
+  "background_size": 1000,
+  "nsamples": 200
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "stoch_raw_runs_v1",
+  "n_runs": 1,
+  "run_seeds": [],
+  "replica_selection": "central_prediction_on_explained_instances",
+  "replica_A": 5,
+  "replica_B": 3,
+  "n_explained": 4868,
+  "n_features": 119,
+  "explained_local_idx_sha1": "2b4d6cc87d47956a10588c7534abd5e242a29750",
+  "is_deterministic_runs": true,
+  "training_run_params": {
+    "model_type": "xgboost",
+    "seed_base": 42,
+    "window_parameters": {
+      "L": 5,
+      "S": 2,
+      "H": 2,
+      "R": 8,
+      "K_FRAC": 0.1
+    },
+    "cv_n_splits": 3,
+    "class_weighting": {
+      "enabled": true,
+      "scheme": "balanced_sample_weights",
+      "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+      "clipped": false,
+      "evaluation_pr_auc_weighted": false,
+      "replica_data_scope": "training_core_before_early_stopping_tail",
+      "tuning_data_scope": "fold_training_only",
+      "lr_full_window_data_scope": null
+    },
+    "n_trials_xgboost": 30,
+    "es_rounds": 50,
+    "max_boost_round": 2000,
+    "val_tail_frac": 0.15,
+    "xgb_fixed": {
+      "tree_method": "hist",
+      "eval_metric": "aucpr",
+      "verbosity": 0,
+      "n_jobs": -1,
+      "objective": "binary:logistic"
+    }
+  }
+}

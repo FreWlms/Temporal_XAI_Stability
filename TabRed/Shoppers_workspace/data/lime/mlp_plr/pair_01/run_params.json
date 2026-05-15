@@ -1,0 +1,60 @@
+{
+  "explainer": "lime",
+  "model_type": "mlp_plr",
+  "pair_id": 1,
+  "R": 8,
+  "n_features": 119,
+  "n_flagged_total": 4868,
+  "n_explained": 400,
+  "flagged_idx_sha1": "9a1ef28eafefd4942127bea647f9e9b3ba5982c0",
+  "lime_subsample_sha1": "a27af455142e2cc7b00509fbc7bee1728ac12a54",
+  "lime_version": "0.2.0.1",
+  "training_run_params": {
+    "model_type": "mlp_plr",
+    "seed_base": 42,
+    "window_parameters": {
+      "L": 5,
+      "S": 2,
+      "H": 2,
+      "R": 8,
+      "K_FRAC": 0.1
+    },
+    "cv_n_splits": 3,
+    "n_trials_mlp": 30,
+    "mlp_fixed": {
+      "max_epochs": 50,
+      "tuning_max_epochs": 25,
+      "patience": 5,
+      "batch_size": 1024,
+      "val_tail_frac": 0.15
+    },
+    "class_weighting": {
+      "enabled": true,
+      "scheme": "balanced_sample_weights",
+      "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+      "clipped": false,
+      "evaluation_pr_auc_weighted": false,
+      "replica_data_scope": "training_core_before_early_stopping_tail",
+      "tuning_data_scope": "fold_training_post_internal_es_split",
+      "loss_normalization": "mean_of_weighted_per_row_BCE"
+    }
+  },
+  "lime_config": {
+    "n_lime_subsample": 400,
+    "num_samples": 2500,
+    "basis": "per-window raw training data",
+    "discretize_continuous": false,
+    "sample_around_instance": true,
+    "categorical_features": [
+      113,
+      114,
+      115,
+      116,
+      117,
+      118
+    ],
+    "subsample_seed": 142,
+    "explainer_seed_A": 143,
+    "explainer_seed_B": 144
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "model_type": "logreg",
+  "seed_base": 42,
+  "window_parameters": {
+    "L": 5,
+    "S": 2,
+    "H": 2,
+    "R": 8,
+    "K_FRAC": 0.1
+  },
+  "cv_n_splits": 3,
+  "class_weighting": {
+    "enabled": true,
+    "scheme": "balanced_sample_weights",
+    "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+    "clipped": false,
+    "evaluation_pr_auc_weighted": false,
+    "replica_data_scope": "full_window_no_es",
+    "tuning_data_scope": "fold_training_only",
+    "lr_full_window_data_scope": "full_window_no_es"
+  },
+  "lr_reference_basis_schema": "coef_ref_basis_v1",
+  "lr_full_window_reference_fit": true,
+  "n_trials_logreg": 30,
+  "lr_fixed": {
+    "solver": "newton-cholesky",
+    "max_iter": 500
+  }
+}

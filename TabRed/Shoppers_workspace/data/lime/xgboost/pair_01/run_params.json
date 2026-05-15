@@ -1,0 +1,63 @@
+{
+  "explainer": "lime",
+  "model_type": "xgboost",
+  "pair_id": 1,
+  "R": 8,
+  "n_features": 119,
+  "n_flagged_total": 4868,
+  "n_explained": 400,
+  "flagged_idx_sha1": "2b4d6cc87d47956a10588c7534abd5e242a29750",
+  "lime_subsample_sha1": "c33ad982793bdbaa012ea5102e03119d30e6de38",
+  "lime_version": "0.2.0.1",
+  "training_run_params": {
+    "model_type": "xgboost",
+    "seed_base": 42,
+    "window_parameters": {
+      "L": 5,
+      "S": 2,
+      "H": 2,
+      "R": 8,
+      "K_FRAC": 0.1
+    },
+    "cv_n_splits": 3,
+    "class_weighting": {
+      "enabled": true,
+      "scheme": "balanced_sample_weights",
+      "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+      "clipped": false,
+      "evaluation_pr_auc_weighted": false,
+      "replica_data_scope": "training_core_before_early_stopping_tail",
+      "tuning_data_scope": "fold_training_only",
+      "lr_full_window_data_scope": null
+    },
+    "n_trials_xgboost": 30,
+    "es_rounds": 50,
+    "max_boost_round": 2000,
+    "val_tail_frac": 0.15,
+    "xgb_fixed": {
+      "tree_method": "hist",
+      "eval_metric": "aucpr",
+      "verbosity": 0,
+      "n_jobs": -1,
+      "objective": "binary:logistic"
+    }
+  },
+  "lime_config": {
+    "n_lime_subsample": 400,
+    "num_samples": 2500,
+    "basis": "per-window raw training data",
+    "discretize_continuous": false,
+    "sample_around_instance": true,
+    "categorical_features": [
+      113,
+      114,
+      115,
+      116,
+      117,
+      118
+    ],
+    "subsample_seed": 142,
+    "explainer_seed_A": 143,
+    "explainer_seed_B": 144
+  }
+}
