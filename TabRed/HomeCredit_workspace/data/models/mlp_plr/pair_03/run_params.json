@@ -1,0 +1,36 @@
+{
+  "model_type": "mlp_plr",
+  "seed_base": 42,
+  "window_parameters": {
+    "L": 6,
+    "S": 4,
+    "H": 3,
+    "R": 8,
+    "K_FRAC": 0.1,
+    "PAIR_STRIDE": 3
+  },
+  "cv_n_splits": 3,
+  "n_trials_mlp": 25,
+  "mlp_fixed": {
+    "max_epochs": 50,
+    "tuning_max_epochs": 20,
+    "patience": 10,
+    "batch_size": 1024,
+    "val_tail_frac": 0.15
+  },
+  "cat_min_freq": 0.01,
+  "cat_unk_value": -1,
+  "encoder_scope": "per_window_side_shared",
+  "cat_encoding": "one_hot_per_window_l2_threshold",
+  "bundle_schema": "mlp_plr_bundle_v3_homecredit_oh",
+  "class_weighting": {
+    "enabled": true,
+    "scheme": "balanced_sample_weights",
+    "formula": "w_pos = n / (2 * n_pos); w_neg = n / (2 * n_neg)",
+    "clipped": false,
+    "evaluation_pr_auc_weighted": false,
+    "replica_data_scope": "training_core_before_early_stopping_tail",
+    "tuning_data_scope": "fold_training_post_internal_es_split",
+    "loss_normalization": "mean_of_weighted_per_row_BCE"
+  }
+}
